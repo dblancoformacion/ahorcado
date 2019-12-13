@@ -15,7 +15,10 @@ function formulario_resolver($p){
 	$r=null;
 	$r.='<form method="post">';
 	for($i=0;$i<strlen($p);$i++){
-		if(isset($_POST['letras'][$i]))
+		if(
+			isset($_POST['letras'][$i]) and
+			$_POST['letras'][$i]==$p[$i]
+		)
 			$v=$_POST['letras'][$i];
 		else $v='';
 		$r.='<input name="letras[]" value="'.$v.'" size="1">';
