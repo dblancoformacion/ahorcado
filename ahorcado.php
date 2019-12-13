@@ -2,19 +2,17 @@
 
 if(isset($_POST['resultado'])){
 	$p=$_POST['resultado'];
-	echo '<pre>';
-	print_r($_POST['letras']);
-	echo '</pre>';
 }
 else{
 	include 'palabras.php';
 	$p=$palabras[rand(1,count($palabras))-1];
+	$p=filtra_palabra($p);
 }
 
 function formulario_resolver($p){
 	$r=null;
 	$r.='<form method="post">';
-	for($i=0;$i<strlen($p);$i++){
+	for($i=0;$i<iconv_strlen($p);$i++){
 		if(
 			isset($_POST['letras'][$i]) and
 			$_POST['letras'][$i]==$p[$i]
@@ -28,5 +26,22 @@ function formulario_resolver($p){
 	$r.='</form>';
 	return $r;
 }
-
+function filtra_palabra($p){
+	$p=strtoupper($p);
+	foreach([
+		'Á'=>'A',
+		'É'=>'E',
+		'Í'=>'I',
+		'Ó'=>'O',
+		'Ú'=>'U',
+		'á'=>'A',
+		'é'=>'E',
+		'í'=>'I',
+		'ó'=>'O',
+		'ú'=>'U',
+		'ñ'=>'N',
+	] as $i=>$f)
+		$p=str_replace($i,$f,$p);
+	return $p;
+}
 echo formulario_resolver($p);
