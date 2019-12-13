@@ -42,7 +42,7 @@ function formulario_resolver($p){
 	$r.='<input type="hidden" name="resultado" value="'.$p.'">';
 	$r.='<input type="hidden" name="intentos" value="'.$_POST['intentos'].'">';
 	$r.='<input type="hidden" name="fallos" value="'.$_POST['fallos'].'">';
-	$r.='<button>Resolver</button>';
+	//$r.='<button>Resolver</button>';
 	$r.='</form>';
 	return $r;
 }
