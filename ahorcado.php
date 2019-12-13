@@ -9,13 +9,17 @@ else{
 	include 'palabras.php';
 	$p=$palabras[rand(1,count($palabras))-1];
 	$p=filtra_palabra($p);
+	$_POST['intentos']=0;
 }
 if(isset($_POST['letra'])){
 	$l=strtoupper($_POST['letra']);
 	for($i=0;$i<iconv_strlen($p);$i++){
-		if($l==$p[$i])
+		if($l==$p[$i]){
 			$_POST['letras'][$i]=$l;
+			$acierto=1;
+		}
 	}
+	if(!isset($acierto)) $_POST['intentos']++;
 }
 function formulario_resolver($p){
 	$r=null;
@@ -27,9 +31,10 @@ function formulario_resolver($p){
 		)
 			$v=$_POST['letras'][$i];
 		else $v='';
-		$r.='<input name="letras[]" value="'.$v.'" size="1">';
+		$r.='<input name="letras[]" value="'.$v.'" size="1" style="text-align:center">';
 	}
 	$r.='<input type="hidden" name="resultado" value="'.$p.'">';
+	$r.='<input type="hidden" name="intentos" value="'.$_POST['intentos'].'">';
 	$r.='<button>Resolver</button>';
 	$r.='</form>';
 	return $r;
@@ -43,6 +48,7 @@ function formulario_probar($p){
 		$r.='<input type="hidden" name="letras[]" value="'.$_POST['letras'][$i].'">';
 	}
 	$r.='<input type="hidden" name="resultado" value="'.$p.'">';
+	$r.='<input type="hidden" name="intentos" value="'.$_POST['intentos'].'">';
 	$r.='<button>Probar</button>';
 	$r.='</form>';
 	return $r;
@@ -67,3 +73,4 @@ function filtra_palabra($p){
 }
 echo formulario_resolver($p);
 echo formulario_probar($p);
+echo $_POST['intentos'].' intentos';
