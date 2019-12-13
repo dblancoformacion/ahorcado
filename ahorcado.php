@@ -1,28 +1,26 @@
 <?php
 
-if(isset($_GET['letras'])){
+if(isset($_POST['resultado'])){
+	$p=$_POST['resultado'];
 	echo '<pre>';
-	print_r($_GET['letras']);
+	print_r($_POST['letras']);
 	echo '</pre>';
 }
-
-$palabras=[
-	'fondo',
-	'hondo',
-	'abuela',
-	'santander',
-];
-
-include 'palabras.php';
-
-$n=round(rand());
-$p=$palabras[rand(1,count($palabras))-1];
+else{
+	include 'palabras.php';
+	$p=$palabras[rand(1,count($palabras))-1];
+}
 
 function formulario_resolver($p){
 	$r=null;
-	$r.='<form>';
-	for($i=0;$i<strlen($p);$i++)
-		$r.='<input name="letras[]" size="1">';
+	$r.='<form method="post">';
+	for($i=0;$i<strlen($p);$i++){
+		if(isset($_POST['letras'][$i]))
+			$v=$_POST['letras'][$i];
+		else $v='';
+		$r.='<input name="letras[]" value="'.$v.'" size="1">';
+	}
+	$r.='<input type="hidden" name="resultado" value="'.$p.'">';
 	$r.='<button>Resolver</button>';
 	$r.='</form>';
 	return $r;
