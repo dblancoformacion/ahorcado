@@ -1,4 +1,4 @@
-<div style="margin:10px"><a href="ahorcado.php">Otra palabra</a></div>
+<div style="margin:10px"><a href="index.php">Otra palabra</a></div>
 <?php
 if(isset($_POST['resultado'])){
 	$p=$_POST['resultado'];
