@@ -1,5 +1,6 @@
 <div style="margin:10px"><a href="index.php">Otra palabra</a></div>
 <?php
+$vocales=['A','E','I','O','U'];
 if(isset($_POST['resultado'])){
 	$p=$_POST['resultado'];
 }
@@ -12,15 +13,31 @@ else{
 }
 if(isset($_POST['letra'])){
 	$l=strtoupper($_POST['letra']);
-	for($i=0;$i<iconv_strlen($p);$i++){
-		if($l==$p[$i]){
-			$_POST['letras'][$i]=$l;
-			$acierto=1;
+	if(in_array($l,$vocales)) unset($_POST['letra']);
+	else{
+		for($i=0;$i<iconv_strlen($p);$i++){
+			if($l==$p[$i]){
+				$_POST['letras'][$i]=$l;
+				$acierto=1;
+			}
 		}
-	}
-	if(!isset($acierto)){
-		$_POST['intentos']++;
-		$_POST['fallos'].=' '.strtoupper($_POST['letra']);
+		if(!isset($acierto)){
+			$_POST['intentos']++;
+			$_POST['fallos'].=' '.strtoupper($_POST['letra']);
+		}
+		else if(isset($_POST['letras'])){
+			$faltan=null;
+			$consonantes=0;
+			for($i=0;$i<iconv_strlen($p);$i++)
+				if(!in_array($p[$i],$_POST['letras']))
+					$faltan[]=$p[$i];
+			foreach($faltan as $f)
+				if(!in_array($f,$vocales))
+					$consonantes++;
+			if(!$consonantes)
+				for($i=0;$i<iconv_strlen($p);$i++)
+					$_POST['letras'][$i]=$p[$i];
+		}
 	}
 }
 if(isset($_POST['letras'])){
