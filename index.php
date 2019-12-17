@@ -1,12 +1,14 @@
 <?php
 $vocales=['A','E','I','O','U'];
+session_start();
 if(isset($_POST['resultado'])){
-	$p=$_POST['resultado'];
+	$p=$_SESSION['resultado'];
 }
 else{
 	include 'palabras.php';
 	$p=$palabras[rand(1,count($palabras))-1];
 	$p=filtra_palabra($p);
+	$_SESSION['resultado']=$p;
 	$_POST['intentos']=0;
 	if(isset($_GET['puntos']))
 		$_POST['puntos']=deco($_GET['puntos']);
@@ -67,7 +69,7 @@ function formulario_resolver($p){
 		else $v='';
 		$r.='<input name="letras[]" value="'.$v.'" size="1" style="text-align:center">';
 	}
-	$r.='<input type="hidden" name="resultado" value="'.$p.'">';
+	//$r.='<input type="hidden" name="resultado" value="'.$p.'">';
 	$r.='<input type="hidden" name="intentos" value="'.$_POST['intentos'].'">';
 	$r.='<input type="hidden" name="fallos" value="'.$_POST['fallos'].'">';
 	//$r.='<button>Resolver</button>';
@@ -82,7 +84,8 @@ function formulario_probar($p){
 		if(!isset($_POST['letras'][$i])) $_POST['letras'][$i]='';
 		$r.='<input type="hidden" name="letras[]" value="'.$_POST['letras'][$i].'">';
 	}
-	$r.='<input type="hidden" name="resultado" value="'.$p.'">';
+	//$r.='<input type="hidden" name="resultado" value="'.$p.'">';
+	$r.='<input type="hidden" name="resultado" value="1">';
 	$r.='<input type="hidden" name="intentos" value="'.$_POST['intentos'].'">';
 	$r.='<input type="hidden" name="fallos" value="'.$_POST['fallos'].'">';
 	$r.='<input type="hidden" name="puntos" value="'.$_POST['puntos'].'">';
