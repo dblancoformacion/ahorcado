@@ -9,7 +9,7 @@ else{
 	$p=filtra_palabra($p);
 	$_POST['intentos']=0;
 	if(isset($_GET['puntos']))
-		$_POST['puntos']=$_GET['puntos'];
+		$_POST['puntos']=deco($_GET['puntos']);
 	else $_POST['puntos']=0;
 	$_POST['fallos']='';
 }
@@ -51,7 +51,7 @@ if(isset($_POST['letras'])){
 	if($p==implode($_POST['letras'])){
 		echo '<div style="font-size:3em">¡Enhorabuena!</div>';
 		echo '<div style="margin:10px"><a href="index.php';
-		if(isset($_POST['puntos'])) echo '?puntos='.$_POST['puntos'];
+		if(isset($_POST['puntos'])) echo '?puntos='.md5($_POST['puntos']);
 		echo '">Otra palabra</a></div>';
 	}
 }
@@ -107,6 +107,12 @@ function filtra_palabra($p){
 	] as $i=>$f)
 		$p=str_replace($i,$f,$p);
 	return $p;
+}
+function deco($n){
+	for($i=0;$i<1e3;$i++)
+		if(md5($i)==$_GET['puntos'])
+			$n=$i;
+	return $n;
 }
 echo formulario_resolver($p);
 echo formulario_probar($p);
