@@ -1,4 +1,3 @@
-<div style="margin:10px"><a href="index.php">Otra palabra</a></div>
 <?php
 $vocales=['A','E','I','O','U'];
 if(isset($_POST['resultado'])){
@@ -9,10 +8,16 @@ else{
 	$p=$palabras[rand(1,count($palabras))-1];
 	$p=filtra_palabra($p);
 	$_POST['intentos']=0;
+	if(isset($_GET['puntos']))
+		$_POST['puntos']=$_GET['puntos'];
+	else $_POST['puntos']=0;
 	$_POST['fallos']='';
 }
 if(isset($_POST['letra'])){
 	$l=strtoupper($_POST['letra']);
+	if( isset($_POST['letras']) and
+		in_array($l,$_POST['letras']))
+		$nueva=0; else $nueva=1;
 	if(in_array($l,$vocales)) unset($_POST['letra']);
 	else{
 		for($i=0;$i<iconv_strlen($p);$i++){
@@ -23,9 +28,11 @@ if(isset($_POST['letra'])){
 		}
 		if(!isset($acierto)){
 			$_POST['intentos']++;
+			if($_POST['intentos']>9) $_POST['puntos']=0;
 			$_POST['fallos'].=' '.strtoupper($_POST['letra']);
 		}
 		else if(isset($_POST['letras'])){
+			if($nueva) $_POST['puntos']++;
 			$faltan=null;
 			$consonantes=0;
 			for($i=0;$i<iconv_strlen($p);$i++)
@@ -41,8 +48,12 @@ if(isset($_POST['letra'])){
 	}
 }
 if(isset($_POST['letras'])){
-	if($p==implode($_POST['letras']))
+	if($p==implode($_POST['letras'])){
 		echo '<div style="font-size:3em">¡Enhorabuena!</div>';
+		echo '<div style="margin:10px"><a href="index.php';
+		if(isset($_POST['puntos'])) echo '?puntos='.$_POST['puntos'];
+		echo '">Otra palabra</a></div>';
+	}
 }
 function formulario_resolver($p){
 	$r=null;
@@ -74,6 +85,7 @@ function formulario_probar($p){
 	$r.='<input type="hidden" name="resultado" value="'.$p.'">';
 	$r.='<input type="hidden" name="intentos" value="'.$_POST['intentos'].'">';
 	$r.='<input type="hidden" name="fallos" value="'.$_POST['fallos'].'">';
+	$r.='<input type="hidden" name="puntos" value="'.$_POST['puntos'].'">';
 	$r.='<button>Probar</button>';
 	$r.='</form>';
 	return $r;
@@ -98,7 +110,8 @@ function filtra_palabra($p){
 }
 echo formulario_resolver($p);
 echo formulario_probar($p);
-echo $_POST['intentos'].' intentos : '.$_POST['fallos'];
+echo '<div>'.$_POST['intentos'].' intentos : '.$_POST['fallos'].'</div>';
+echo '<div style="font-size:3em">'.$_POST['puntos'].'</div>';
 $txt=null;
 switch($_POST['intentos']){
 	case 0: break;
