@@ -118,7 +118,8 @@ function deco($n){
 	return $n;
 }
 echo formulario_resolver($p);
-echo formulario_probar($p);
+if(!isset($_POST['letras']) or $p!=implode($_POST['letras']))
+	echo formulario_probar($p);
 echo '<div>'.$_POST['intentos'].' intentos : '.$_POST['fallos'].'</div>';
 echo '<div style="font-size:3em">'.$_POST['puntos'].'</div>';
 $txt=null;
