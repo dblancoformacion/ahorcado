@@ -1,6 +1,7 @@
 <?php
 $vocales=['A','E','I','O','U'];
 session_start();
+$puntos=file_get_contents('puntos.txt');
 if(isset($_POST['resultado'])){
 	$p=$_SESSION['resultado'];
 }
@@ -34,7 +35,13 @@ if(isset($_POST['letra'])){
 			$_POST['fallos'].=' '.strtoupper($_POST['letra']);
 		}
 		else if(isset($_POST['letras'])){
-			if($nueva) $_POST['puntos']++;
+			if($nueva){
+				$_POST['puntos']++;
+				if($_POST['puntos']>$puntos){
+					$fid=fopen('puntos.txt','w');
+					fputs($fid,$_POST['puntos']);
+				}
+			}
 			$faltan=null;
 			$consonantes=0;
 			for($i=0;$i<iconv_strlen($p);$i++)
@@ -122,6 +129,7 @@ if(!isset($_POST['letras']) or $p!=implode($_POST['letras']))
 	echo formulario_probar($p);
 echo '<div>'.$_POST['intentos'].' intentos : '.$_POST['fallos'].'</div>';
 echo '<div style="font-size:3em">'.$_POST['puntos'].'</div>';
+echo '<div style="font-size:1em">Record en '.$puntos.' puntos</div>';
 $txt=null;
 switch($_POST['intentos']){
 	case 0: break;
